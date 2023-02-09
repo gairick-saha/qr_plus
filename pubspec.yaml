@@ -9,6 +9,7 @@ screenshots:
     path: doc/asset/paranoid-qr.gif
   - description: 'An example QR code rendered with QrPlusMode.plain'
     path: doc/asset/plain-qr.jpg
+publish_to: none
 
 environment:
   sdk: '>=2.18.4 <3.0.0'
@@ -25,7 +26,9 @@ dependencies:
   mobile_scanner: ^2.1.0
   ntp: ^2.0.0
   qr_flutter: ^4.0.0
-  screen_capture_event: ^1.1.1
+  screen_capture_event: 
+    git:
+      url: https://github.com/gairick-saha/screen_capture_event.git
   uuid: ^3.0.7
 
 dev_dependencies:
