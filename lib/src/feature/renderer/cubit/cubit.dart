@@ -5,7 +5,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:qr_plus/src/model/model.dart';
 import 'package:qr_plus/src/repository/repository.dart';
 import 'package:qr_plus/src/utility/utility.dart';
-import 'package:screen_capture_event/screen_capture_event.dart';
 import 'package:uuid/uuid.dart';
 
 part 'cubit.gen.dart';

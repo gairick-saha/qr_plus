@@ -29,17 +29,12 @@ class QrPlusRendererCubit extends Cubit<QrPlusRendererState> {
   /// The duration how long each piece of the QR code is visible.
   final Duration duration;
 
-  ScreenCaptureEvent? _screenCaptureEvent;
-
   StreamSubscription<ConnectivityResult>? _connectivitySubscription;
   Timer? _crumbledDataIndexTimer;
 
   /// Initializes the cubit by setting up the listeners and timers.
   Future<void> initialize() async {
     recreate();
-    _screenCaptureEvent = ScreenCaptureEvent();
-    _screenCaptureEvent
-        ?.addScreenRecordListener(onScreenRecordingStatusChanged);
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen(onConnectivityChange);
     _crumbledDataIndexTimer =
@@ -62,20 +57,6 @@ class QrPlusRendererCubit extends Cubit<QrPlusRendererState> {
     );
   }
 
-  /// Callback to be called when the screen recording status changes.
-  @visibleForTesting
-  // Its OK here
-  // ignore: avoid_positional_boolean_parameters
-  void onScreenRecordingStatusChanged(bool isRecording) {
-    emit(
-      state.copyWith(
-        screenRecorderStatus: isRecording
-            ? ScreenRecorderStatus.recorderOn
-            : ScreenRecorderStatus.recorderOff,
-      ),
-    );
-    maybeUpdateAuthenticity();
-  }
 
   /// Callback to be called when the network connectivity changes.
   @visibleForTesting
@@ -93,9 +74,7 @@ class QrPlusRendererCubit extends Cubit<QrPlusRendererState> {
   @visibleForTesting
   void maybeUpdateAuthenticity() {
     var newAuthenticity = QrPlusAuthenticity.authentic;
-    if (state.screenRecorderStatus == ScreenRecorderStatus.recorderOn) {
-      newAuthenticity = QrPlusAuthenticity.screenRecording;
-    } else if (!state.connectivity.hasNetworkConnection) {
+    if (!state.connectivity.hasNetworkConnection) {
       newAuthenticity = QrPlusAuthenticity.noNetwork;
     }
 
@@ -132,8 +111,6 @@ class QrPlusRendererCubit extends Cubit<QrPlusRendererState> {
   Future<void> close() {
     _connectivitySubscription?.cancel();
     _crumbledDataIndexTimer?.cancel();
-    _screenCaptureEvent?.dispose();
-
     return super.close();
   }
 }
